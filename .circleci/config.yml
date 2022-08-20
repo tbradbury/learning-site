@@ -1,0 +1,104 @@
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: "cimg/node:16.13.0-browsers"
+
+# filters
+only_on_pr_branch: &only_on_pr_branch
+  filters:
+    branches:
+      ignore:
+        - main
+        - /^release.*/
+
+only_on_main_branch: &only_on_main_branch
+  filters:
+    branches:
+      only: 
+        - main
+
+# Jobs
+jobs:
+  install_deps:
+    executor: node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn
+      - save_cache:
+          key: yarn-v1-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+            - node_modules
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - node_modules/*
+            - .next
+
+  unit_tests:
+    working_directory: ~/project
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: run jest
+          command: yarn test:ci
+
+  run_lint:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: run lint
+          command: yarn lint
+
+  build:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run: echo "this is the build job"
+
+workflows:
+  pull_request:
+    jobs:
+      - install_deps:
+          <<: *only_on_pr_branch
+      - unit_tests:
+          <<: *only_on_pr_branch
+          requires:
+            - install_deps
+      - run_lint:
+          <<: *only_on_pr_branch
+          requires:
+            - install_deps
+
+  build:
+    jobs:
+      - install_deps:
+          <<: *only_on_main_branch
+      - unit_tests:
+          <<: *only_on_main_branch
+          requires:
+            - install_deps
+      - run_lint:
+          <<: *only_on_main_branch
+          requires:
+            - install_deps
+      - build:
+          <<: *only_on_main_branch
+          requires:
+            - unit_tests
+            - run_lint
