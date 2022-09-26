@@ -83,8 +83,6 @@ jobs:
 workflows:
   pull_request:
     jobs:
-      - echo:
-          <<: *only_on_pr_branch
       - install_deps:
           <<: *only_on_pr_branch
       - unit_tests:
@@ -113,3 +111,11 @@ workflows:
           requires:
             - unit_tests
             - run_lint
+
+  daily-run-workflow:
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "test-scheduled", << pipeline.schedule.name >> ]
+    jobs:
+      - echo
