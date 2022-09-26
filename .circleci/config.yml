@@ -71,9 +71,20 @@ jobs:
           at: ~/project
       - run: echo "this is the build job"
 
+  echo:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run: echo "this is to test schedules with!"
+
+
 workflows:
   pull_request:
     jobs:
+      - echo:
+          <<: *only_on_pr_branch
       - install_deps:
           <<: *only_on_pr_branch
       - unit_tests:
