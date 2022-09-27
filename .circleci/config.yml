@@ -95,6 +95,9 @@ workflows:
             - install_deps
 
   build:
+    when:
+    not:
+      equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - install_deps:
           <<: *only_on_main_branch
