@@ -71,6 +71,15 @@ jobs:
           at: ~/project
       - run: echo "this is the build job"
 
+  echo:
+    executor: node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run: echo "this is to test schedules with!"
+
+
 workflows:
   pull_request:
     jobs:
@@ -102,3 +111,11 @@ workflows:
           requires:
             - unit_tests
             - run_lint
+
+  daily-run-workflow:
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "test-scheduled", << pipeline.schedule.name >> ]
+    jobs:
+      - echo
