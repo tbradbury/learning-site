@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { UnorderedList, styled } from 'newskit';
 import StyledLink from '../styledlink';
 
@@ -20,19 +21,15 @@ const List: React.FC<ListProps> = ({ list }) => (
   <UnorderedList>
     {list &&
       list.map(({ text, href, lineThrough }, i) => (
-        <>
+        <Fragment key={i}>
           {href ? (
             <StyledLink href={href}>
-              <StyledSpan key={i} lineThrough={lineThrough}>
-                {text}
-              </StyledSpan>
+              <StyledSpan lineThrough={lineThrough}>{text}</StyledSpan>
             </StyledLink>
           ) : (
-            <StyledSpan key={i} lineThrough={lineThrough}>
-              {text}
-            </StyledSpan>
+            <StyledSpan lineThrough={lineThrough}>{text}</StyledSpan>
           )}
-        </>
+        </Fragment>
       ))}
   </UnorderedList>
 );

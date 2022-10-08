@@ -6,10 +6,20 @@ interface TeaserProps {
   description?: string;
   role?: string;
   centerHeader?: boolean;
+  verticalCenter?: boolean;
 }
 
 const StyledH2 = styled(H2)<{ centerHeader?: boolean }>`
   text-align: ${({ centerHeader }) => (centerHeader ? 'center' : 'left')};
+`;
+
+const StyledCard = styled(CardInset)<{ verticalCenter?: boolean }>`
+  ${({ verticalCenter }) =>
+    verticalCenter &&
+    `
+    height: 100%;
+    justify-content: center;
+  `}
 `;
 
 const Teaser: React.FC<TeaserProps> = ({
@@ -18,8 +28,10 @@ const Teaser: React.FC<TeaserProps> = ({
   description,
   role,
   centerHeader,
+  verticalCenter,
 }) => (
-  <CardInset
+  <StyledCard
+    verticalCenter={verticalCenter}
     href={href}
     role={role}
     overrides={{
@@ -45,7 +57,7 @@ const Teaser: React.FC<TeaserProps> = ({
         </P>
       </>
     )}
-  </CardInset>
+  </StyledCard>
 );
 
 export default Teaser;
