@@ -1,13 +1,14 @@
 import HomePage from '.';
-import { screen, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderWithTheme } from '../../helpers/testUtils';
 
+const posts = [
+  { title: 'Post one', id: 'one' },
+  { title: 'Post two', id: 'two' },
+  { title: 'Post three', id: 'three' },
+];
+
 describe('Homepage', () => {
-  const posts = [
-    { title: 'Post one', id: 'one' },
-    { title: 'Post two', id: 'two' },
-    { title: 'Post three', id: 'three' },
-  ];
   beforeEach(() => {
     renderWithTheme(HomePage, { posts });
   });
@@ -42,6 +43,15 @@ describe('Homepage', () => {
     posts.map(({ title, id }) => {
       expect(screen.getByRole(`post-${id}`)).toBeInTheDocument();
       expect(screen.getByRole(`post-${id}-title`).textContent).toBe(title);
+    });
+  });
+});
+
+describe('Homepage without posts', () => {
+  test('should handle no posts', () => {
+    renderWithTheme(HomePage);
+    posts.map(({ id }) => {
+      expect(screen.queryByRole(`post-${id}`)).not.toBeInTheDocument();
     });
   });
 });
