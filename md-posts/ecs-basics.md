@@ -10,31 +10,31 @@ Amazon ECS - Elastic Container Service - is a fully managed container (Docker) o
 
 Amazon ECR - Elastic Container Registry - is a fully managed container registry that makes it easy to store, manage, share, and deploy your container images and artifacts anywhere.
 
-Going to take Docker image create in [Build Docker Image](/posts/build-docker-image) then in **circleci** going to deploy to Amazon Elastic Container Service (ECS) from Amazon Elastic Container Registry (ECR). Hopefully!!!!
+We are going to take the Docker image create in [Build Docker Image](/posts/build-docker-image) and update our **circleci** config to deploy it to Amazon Elastic Container Service (ECS) via Amazon Elastic Container Registry (ECR). Hopefully!!!!
 
 **1) Configure CircleCI environment variables**
 
-Going to need a number of env vars to assess AWS services from inside **circleci**
+Going to need a number of env vars to access AWS services from inside **circleci**
 
 - **AWS_ACCESS_KEY_ID** - Security credentials for AWS.
 
 - **AWS_SECRET_ACCESS_KEY** - Security credentials for AWS.
 
-- **AWS_DEFAULT_REGION** - default region we will create recourse in.
+- **AWS_DEFAULT_REGION** - default region we will create resources in.
 
 - **AWS_ACCOUNT_ID** - Required for deployment.
 
 - **AWS_ECR_ACCOUNT_URL** - Amazon ECR account URL that maps to an AWS account, e.g. {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_DEFAULT_REGION}.amazonaws.com
 
-Will create a **circleci** context so these can be used in multiple projects if need, call it **aws-context**
+Will create a **circleci** context so these can be used in multiple projects if needed, call it **aws-context**
 
-In **AWS Console** go to **IAM** create new user for now give them programmatic access to ECS and ECR and download the credential file.
+In **AWS Console** go to **IAM** and create a new user, for now give them programmatic access to ECS and ECR and download the credential file.
 
 Create a ECR repo in AWS console - {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_DEFAULT_REGION}.amazonaws.com/tutorial-site-registry
 
-We can now build and push our Docker image to AWS ECR if you need to learn how  to create docker images take a look at [Build Docker Image](/posts/build-docker-image) tutorial. In the created repo click on the View push commands button and follow the instructions to get your image up to the repos.
+We can now build and push our Docker image to AWS ECR if you need to learn how to create docker images take a look at [Build Docker Image](/posts/build-docker-image) tutorial. In the created repo click on the View push commands button and follow the instructions to get your image up to the repos.
 
-Going to use the **circleci** [ecr orb](https://circleci.com/developer/orbs/orb/circleci/aws-ecr) to our `config.yml` file
+Going to use the **circleci** [ecr orb](https://circleci.com/developer/orbs/orb/circleci/aws-ecr) in our `config.yml` file
 
 Add just under the `version: 2.1` line:
 
@@ -162,9 +162,9 @@ resource "aws_ecs_task_definition" "app" {
 }
 ```
 
-There is a lot here but essentially we are assigning out Doicker image we put in our ECR repo, port binding for container & host (3000), merory & CPU requirements and ensoring it has the correct IAM permissions to exacute more later.
+There is a lot here but essentially we are assigning our Doicker image we put in our ECR repo, port binding for container & host (3000), merory & CPU requirements and ensuring it has the correct IAM permissions to exacute.
 
-We are using AWS **Fargete**. ECS comes in 2 flavours, Classic where we use EC2 instances that we have to provision or we can use **Fargete** that is serverless. We don't have to worrie about provisioning any EC2 instances AWS looks after it all for us.
+We are using AWS **Fargete**. ECS comes in 2 flavours, Classic where we use EC2 instances that we have to provision or we can use **Fargete** that is serverless. We don't have to worry about provisioning any EC2 instances AWS looks after it all for us.
 
 Then we create the service:
 
@@ -302,7 +302,7 @@ resource "aws_route_table_association" "private" {
 
 **lb.tf**
 
-Set up our load balancer so traffic is distubuted accross our container (we only have one so a little pointless but if you add more):
+Set up our load balancer so traffic is distubuted across our containers (we only have one so this is a little pointless but if you add more):
 
 ```
 resource "aws_alb" "main" {
@@ -344,7 +344,7 @@ resource "aws_alb_listener" "front_end" {
 
 **security.tf**
 
-Ensure our site is secure only getting the traffic we want (moment is from anyone online) and only throught load balancer:
+Ensure our site is secure only getting the traffic we want (at the moment it is from anyone online) and only throught load balancer:
 
 ```
 resource "aws_alb" "main" {
@@ -574,7 +574,7 @@ Then run
 
 `terraform apply` to build our infrastructure.
 
-Once it up and running go to `{aws_alb.main.dns_name}:3000` to take a look.
+Once its up and running go to `{aws_alb.main.dns_name}:3000` to take a look.
 
 To push a new version of our site up to our ECS infrastructure we will use the **circleci** [ecs orb](https://circleci.com/developer/orbs/orb/circleci/aws-ecs)
 

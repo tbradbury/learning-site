@@ -29,6 +29,9 @@ const ArticleStyling = css`
     -webkit-overflow-scrolling: touch;
     overflow-x: scroll;
   }
+  a {
+    color: #577ffb;
+  }
 `;
 
 const Article: React.FC<ArticleProps> = ({

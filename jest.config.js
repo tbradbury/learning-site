@@ -24,9 +24,7 @@ const customJestConfig = {
     },
   },
   collectCoverageFrom: ['**/*.{ts,tsx}'],
-  testPathIgnorePatterns: ['/node_modules/', ],
   coveragePathIgnorePatterns: [
-    '/node_modules/', 
     '<rootDir>/lib/md-build-utils.ts', 
     '<rootDir>/theme/GlabalStyles.ts',
     '<rootDir>/pages'
