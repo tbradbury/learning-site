@@ -6,6 +6,8 @@ keyword: 'eslint, vscode'
 order: 2
 ---
 
+Out of date!!!!!
+
 Lets add a **Linter** to the project. Linting will save us a lot of time by analysing the source code, flag programming & stylistic errors. It can highlight issues in your code and even fix them for you. In this project we are going to use **ESLint** with **Prettier** (this is an opinionated code formatter).
 
 Install:

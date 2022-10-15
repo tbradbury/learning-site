@@ -6,11 +6,11 @@ keyword: 'SEO, Sitemap, Meta tags'
 order: 8
 ---
 
-So I have a site but unless people can find it there wont any visitors. Lets sort the sites SEO (Search Engine optimization).
+So I have a site but unless people can find it there will not be any visitors. Lets sort the sites SEO (Search Engine optimization).
 
 ## Sitemap
 
-A **sitema** tells search engines about your site. It will need to be automaticly generated to ensure its up to date with the content.
+A **sitemap** tells search engines about your site. It will need to be automaticly generated to ensure its up to date with the content.
 
 Start by updating the `next.config.js` file:
 
@@ -28,7 +28,7 @@ module.exports = {
 };
 ```
 
-The code ensures a new script is called when Next build, this script will genterate the sitemap.
+The code ensures a new script is called when Next build is run, this script will genterate the sitemap.
 
 Next create the `generateSiteMap.js` file in the lib folder.
 
@@ -118,7 +118,7 @@ generateSiteMap('https://www.example.co.uk', './public/');
 
 The script build the `sitemap.xml` file in to the pubulic folder.
 
-In the public folder I will also add a rebot.txt file with information for search engine crawlers, This is givepermission for crawler to ssearch the site and tell them where to find the sitemap.
+In the public folder I will also add a rebots.txt file with information for search engine crawlers, This is giving permission for crawler to search the site and tell them where to find the sitemap.
 
 ```
 User-agent: *
@@ -127,7 +127,7 @@ Sitemap: https://www.example.co.uk/sitemap.xml
 ```
 
 ## Meta data
-To improve the SEO we need to add some mata data tags to our pages that will give extra information about the page and inprove the likely hood of ranking high in search results. Next has a [**Head** component](https://nextjs.org/docs/api-reference/next/head) that makes adding elements to a pages head easy.
+To improve the SEO we need to add some mata data tags to our pages that will give extra information about the page and inprove the likelihood of ranking high in search results. Next has a [**Head** component](https://nextjs.org/docs/api-reference/next/head) that makes adding elements to a pages head easy.
 
 **SEO Component** `components/seo/index.tsx`
 
@@ -180,7 +180,7 @@ Or other pages.
 
 The posts/articles are written in **Markdown** see [Basic site](/posts/basic-site) 
 
-These already have title and date, we just need to add description and  keywords:
+These already have title and date, we just need to add description and keywords:
 
 ```
 ---

@@ -6,20 +6,20 @@ keyword: 'Kubernetes, API, Docker'
 order: 8
 ---
 
-To get a better understanding of kubernetes we are going to deploy our tutorial site to a local Kubernetes cluster. We will then add a basic api that can be only access from with in the cluster by the site.
+To get a better understanding of kubernetes we are going to deploy our tutorial site to a local Kubernetes cluster. We will then add a basic api that can be accessed only from within the cluster by the site.
 
 ## Local Kubernetes cluster
 
-We have a couple of options for this, one is **[Minikube](https://minikube.sigs.k8s.io/docs/start/)**. We will however be using **[Docker Desktops](https://www.docker.com/products/docker-desktop)** built in Kubernetes cluster, you  just need to turn it on in the preferences.
+We have a couple of options for this, one is **[Minikube](https://minikube.sigs.k8s.io/docs/start/)**. We will however be using **[Docker Desktops](https://www.docker.com/products/docker-desktop)** built in Kubernetes cluster, you just need to turn it on in the preferences.
 
 We have already put our tutorial-site into a docker image. See [Build Docker Image](/posts/build-docker-image).
 
 To deploy and run this image in our local Kubernetes cluster we need to give it a version number. We can do this in 2 ways.
 
-1) If we already have the image create we can tag it `docker tag local-tutorial-site movie-api:1.0.0`
-2) We can build it again with tag `docker build -t local-tutorial-site:1.0.0 .`
+1) If we already have the image created we can tag it `docker tag local-tutorial-site movie-api:1.0.0`
+2) We can build it again with a tag `docker build -t local-tutorial-site:1.0.0 .`
 
-I'm going to create a new folder called `local-ts-kube` and cd into it. Here we will put all the kubernetes resource definition YAML files that will tell our cluster what we are deploying and how they should be set up. We will start with a `local.yaml` for a tutorial-site app:
+I'm going to create a new folder called `local-ts-kube` and cd into it. Here we will put all the kubernetes resource definition YAML files that will tell our cluster what we are deploying and how they should be set up. We will start with a `local.yaml` for our tutorial-site app:
 
 ```
 apiVersion: apps/v1
@@ -58,17 +58,17 @@ spec:
   type: LoadBalancer
 ```
 
-The file has 2 part a **Deployment** and a **Service**. 
+The file has 2 parts a **Deployment** and a **Service**. 
 
-The Deployment creates and runs containers/pods and keeps them alive i.e takes our image and deploys and runs in in our cluster. The first 4 lines tell us it a deployment using version type apps/v1 and that it's name is local-tutorial-site. We then state the number of replicas of the pod we want. So here we have 1 replica of out tutorial-site image. So hight trafic sites can have mutiple replicas of the same site that uses a load balancer to distabute traffic to. The selector and template sections tie the deployment resourse to the replica set. Then the container section defines what will actually run in the pod/s, out local-tutorial-site image along with the portt the container will listen on. Note we have set the imagePullPolicy to never, as our image is currently stored locally not in a repo like Docker Hub. This ensure we pull the local version.
+The Deployment creates and runs containers/pods and keeps them alive i.e takes our image and deploys and runs it in our cluster. The first 4 lines tell us it is a deployment using version type apps/v1 and that it's name is local-tutorial-site. We then state the number of replicas of the pod we want. So here we have 1 replica of our tutorial-site image as we are doing this locally and can only have 1. Hight traffic sites can have mutiple replicas of the same site that uses a load balancer to distabute traffic to. The selector and template sections tie the deployment resourse to the replica set. Then the container section defines what will actually run in the pod/s, our local-tutorial-site image along with the port the container will listen on. Note we have set the imagePullPolicy to never, as our image is currently stored locally not in a repo like Docker Hub. This ensures we pull the local version.
 
-We then define the Service. A Service resource makes Pods accessible to other Pods or users outside the cluster. Without defining our servise as type **LoadBalancer** it would not be accessible from outside the cluster, Default type is **ClusterIP**. The selector defines what is doing to be exposed by the service `app: local-tutorial-site` this matches what we set in the Deployment. Ports set that the service will listen for requests on port 3000 and forward them to port 3000 of the target pod/s i.e send traffic to our site.
+We then define the Service. A Service resource makes Pods accessible to other Pods or users outside the cluster. Without defining our servise as type **LoadBalancer** it would not be accessible from outside the cluster, Default type is **ClusterIP**. The selector defines what is going to be exposed by the service `app: local-tutorial-site` this matches what we set in the Deployment. Ports set that the service will listen for requests on port 3000 and forward them to port 3000 of the target pod/s i.e send traffic to our site.
 
-We can now deploy our service to our local cluster using `kubectl apply -f ./local.yaml` we can then check if its been suseful in a number of ways. see pods - `kubectl get pods` or check services `kubectl describe services`. If you go to [http://localhost:3000](http://localhost:3000) you will see your site as normal but it's ruinning in your local Kubernetes cluster.
+We can now deploy our service to our local cluster using `kubectl apply -f ./local.yaml` we can then check if its been successful in a number of ways. See pods - `kubectl get pods` or check services `kubectl describe services`. If you go to [http://localhost:3000](http://localhost:3000) you will see your site as normal but it's ruinning in your local Kubernetes cluster.
 
 ## Add an api service
 
-Lets say we want a movie page on our site that lists the top 100 files of all time. For this we will create a really basic api server that can return that information to be ingested by our site.
+Lets say we want a movie page on our site that lists the top 100 films of all time. For this we will create a really basic api server that can return that information to be ingested by our site.
 
 In a new folder (seperate from out tutorial site) `mkdir fake-api` we will start a new project `npm init -y` in its package.json file we will add one dependency and one command:
 
@@ -132,7 +132,7 @@ json-server.json:
 
 If you then run `yarn start` you will get a api running on http://0.0.0.0/4000. localhost should also work but we need it as 0.0.0.0 to work in Kubernetes.
 
-Now we just beed to turn it into an image with a Dockerfile:
+Now we just need to turn it into an image with a Dockerfile:
 
 ```
 FROM node:12.18-buster
@@ -186,13 +186,13 @@ spec:
       targetPort: 4000
 ```
 
-This is basically the same as the tutorial-site resource but with differnt ports and we have not defined the service type. This means it will be set as the default **ClusterIP**. So Our api will not be available outside our cluster just to pods inside it.
+This is basically the same as the tutorial-site resource but with differnt ports and we have not defined the service type. This means it will be set as the default **ClusterIP**. So our api will not be available outside our cluster just to pods inside it.
 
 We can then deploy it to our cluster `kubectl apply -f ./api.yaml`
 
 ## Update our tutorial site
 
-We need to update or tutorial site to use the api:
+We need to update our tutorial site to use the api:
 
 pages/movis.tsx:
 
@@ -276,7 +276,7 @@ spec:
   type: LoadBalancer
 ```
 
-Here we are doing to important things we are updating the image tag and adding the env var to the api. Notice that the env var is not to `http:0.0.0.0:4000/movies` but to `http://local-movie-api-service:4000/movies`. This is the service name we gave our api this connects our site app to the api service inside out the cluster.
+Here we are doing 2 important things. We are updating the image tag and adding the env var to the api. Notice that the env var is not to `http:0.0.0.0:4000/movies` but to `http://local-movie-api-service:4000/movies`. This is the service name we gave our api. This connects our site app to the api service inside our the cluster.
 
 We can then redeploy our app `kubectl apply -f ./local.yaml` and go to `http://localhost:3000/movies` and see our movies!
 
@@ -285,7 +285,7 @@ To remove our resources we would do:
 `kubectl delete -f ./local.yaml`
 `kubectl delete -f ./api.yaml`
 
-To get into container  you can do the following:
+To get into the container you can do the following:
 
 `kubectl get pods`
 
@@ -293,7 +293,7 @@ Then with the pod name you can then call:
 
 `kubectl exec {pod-name-here} -it -- /bin/sh`
 
-https://learnk8s.io/deploying-nodejs-kubernetes
+[https://learnk8s.io/deploying-nodejs-kubernetes](https://learnk8s.io/deploying-nodejs-kubernetes)
 
 We could also use **Helm** to setup our app, as we did in (EKS Basics)[/posts/eks-basics/].
 

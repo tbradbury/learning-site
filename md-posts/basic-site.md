@@ -1,7 +1,7 @@
 ---
 title: 'Building a basic site'
 date: '2021-01-24'
-description: 'Create a basic site using  Next.js'
+description: 'Create a basic site using Next.js'
 keyword: 'Next.js, React, Markdown'
 order: 1
 ---

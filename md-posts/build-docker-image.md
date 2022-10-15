@@ -8,7 +8,7 @@ order: 4
 
 Wikipedia - *an open-source project that automates the deployment of software applications inside containers by providing an additional layer of abstraction and automation of OS-level virtualization on Linux*.
 
-In other words **Docker** allows you to package an application with all of its dependencies into a standardized unit (Container) that ensure it runs consitently where ever it is deployed.
+In other words **Docker** allows you to package an application with all of its dependencies into a standardized unit (Container) that ensures it runs consitently wherever it is deployed.
 
 **Image**: The blueprints of our application which form the basis of containers
 **Container**: Created from Docker images and run the actual application 
@@ -90,7 +90,7 @@ Can now test it works with:
 
 This starts the docker container on port 3000 you can go to [localhost:3000](http://localhost:3000/) to try it.
 
-If you run `docker images` you will see it give you an image that is **350MB** lets see if we can reduct this.
+If you run `docker images` you will see it gave you an image that is **350MB** lets see if we can reduct this.
 
 ```
 # base image needed to run node application

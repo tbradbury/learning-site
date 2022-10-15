@@ -6,11 +6,13 @@ keyword: 'Jest, Unit tests, React Testing library'
 order: 2
 ---
 
+Out of date!!!!!
+
 To ensure the quality of the code, I need to implement testing. I'll start with Unit testing.
 
 Wikipedia - *Unit tests are typically automated tests written and run by software developers to ensure that a section of an application (known as the "unit") meets its design and behaves as intended.*
 
-I'm going to use **Jest** a JavaScript Testing Framework along with **@testing-library** family of packages helps you test UI components in a user-centric way (I will be using React Testing Library package).
+I'm going to use **Jest** a JavaScript Testing Framework along with **@testing-library** family of packages that help you test UI components in a user-centric way. I will be using the React Testing Library package.
 
 Install:
 
@@ -53,7 +55,7 @@ We also need to add some commands to the `package.json`:
 "test:ci": "jest --coverage --ci"
 ```
 
-The above is added to the script section. Running `yarn test` will now run our test suite. We have added the `--coverage` flag this indicates that test coverage information should be collected and reported in the output. With this we can make a aditional change to out `jest.config.js` file to say what level of coverage we want on out project. 
+The above is added to the script section. Running `yarn test` will now run our test suite. We have added the `--coverage` flag this indicates that test coverage information should be collected and reported in the output. With this we can make a additional change to out `jest.config.js` file to say what level of coverage we want on out project. 
 
 ```
 coverageThreshold: {
@@ -83,7 +85,7 @@ watchPlugins: [
 
 You will now get extra information when filtering by tests.
 
-`yarn test:ci` will run optimised for ci our enviroment. More on this at the end.
+`yarn test:ci` will run optimised for our ci enviroment. More on this at the end.
 
 We need some tests!
 
@@ -180,7 +182,7 @@ render(
 );
 ```
 
-We know our homepage has a H1 title with a aria-label of main-title. @testing-library/react comes with helper functions that enables us to find this `screen.getByLabelText('main-title')` and we are chacking this againt out inline snapshot (this is genterated for you on your fist run after adding `.toMatchInlineSnapshot()`. Now if something will your tile is changed the snapshot will fail and you can check if the change was intentional and update the snapshot or rectify the change.
+We know our homepage has a H1 title with a aria-label of main-title. @testing-library/react comes with helper functions that enables us to find this `screen.getByLabelText('main-title')` and we are chacking this againt our inline snapshot (this is genterated for you on your first run after adding `.toMatchInlineSnapshot()`. Now if something with your test is changed the snapshot will fail and you can check if the change was intentional and update the snapshot or rectify the change.
 
 Here we check that our mock blog post is added to the page (looking for rendered text) and that it has a link to the blog article:
 

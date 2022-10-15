@@ -8,7 +8,7 @@ order: 6
 
 In the last blog we looked at [ECS](/posts/ecs-basics) a fully managed container (Docker) orchestration service. However this is not our only option. In this blog we will look to deploy our site on **EKS - Elastic Kubernetes Service**
 
-Accouding to [Kubernetes site](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/) it is:
+According to the [Kubernetes site](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/):
 
 "Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available." 
 
@@ -16,7 +16,7 @@ It other words its an orchestration service for our containers. Its repidly beco
 
 Start by going thought [Kubernetes basic tutorial](https://kubernetes.io/docs/tutorials/kubernetes-basics/) to undertand the basics.
 
-**Kubernetes Clusters** manages your containers. Consists of two types of resources:
+**Kubernetes Cluster** manages your containers. Consists of two types of resources:
 
 - The **Master** coordinates the cluster
 - **Nodes** are the workers that run applications. Each node has a Kubelet, which is an agent for managing the node and communicating with the Kubernetes master.
@@ -28,7 +28,7 @@ Userful commands
 
 **Kubernetes Deployments** to deploy your contanerized apps to **Kubernetes** you need a Deployment configuration. You specify the container image you want to run and how many replicas of the image you want. 
 
-**Deployment Controller** monitors deployed instances of apps. If something goes wrong with the node hosting the app, a new node is created with new instance of app on.
+**Deployment Controller** monitors deployed instances of apps. If something goes wrong with the node hosting the app, a new node is created with new instance of the app on.
 
 - kubectl create deployment deployment-name --image=url-to-image:v1
 
@@ -37,9 +37,9 @@ Userful commands
 - kubectl get pods - list pods
 - kubectl descride pods - describes pods
 - kubectl logs $POD_NAME - gets logs from names pod, if you had more then one node you would need to add node name as well.
-- kubectl exec -ti $POD_NAME bash -  exec soem cammand on pod here its bash
+- kubectl exec -ti $POD_NAME bash -  exec some cammand on pod here its bash
 
-**Kubernetes Services** an abstraction which defines a logical set of Pods and a policy by which to access them. Enables you to  expose your app to the outside world.
+**Kubernetes Services** an abstraction which defines a logical set of Pods and a policy by which to access them. Enables you to expose your app to the outside world.
 
 - kubectl get services - see list of services
 - kubectl expose deployment/<name-of-service> --type="NodePort" --port 8080 - created new service that exposes app to outside world
@@ -67,7 +67,7 @@ locals {
 }
 ```
 
-We need to tell terraform which provider we are using i.e we are creating something in AWS. We are also setting up a local value se we can set our cluster name.
+We need to tell terraform which provider we are using i.e we are creating something in AWS. We are also setting up a local value so we can set our cluster name.
 
 **versions.tf**
 
@@ -123,7 +123,7 @@ module "vpc" {
 }
 ```
 
-Provisions a VPC, subnets (3 private and three public) and availability zones using the AWS VPC Module. It also adds tags,used to provision public and internal load balancers in the appropriate subnets.
+Provisions a VPC, subnets (3 private and three public) and availability zones using the AWS VPC Module. It also adds tags, used to provision public and internal load balancers in the appropriate subnets.
 
 **security-groups.tf**
 
@@ -210,7 +210,7 @@ Provisions all the resources required to set up an EKS cluster using the AWS EKS
 - AutoScaling Groups
 - security groups added to workers
 - Creates kubeconfig file
-- adds additional IAM users to Cluster. When you create the Cluster with Terraform the users your using to access AWS with **awscli** will automaticlay be added to the Cluster so you they have access to  the cluster. But we willwant to make changes to this from our CI workflow. If your using the same IAM credetials (not recommended) this will be fine. If your using seperate user there IAM ARN value needs adding to the [aws-auth ConfigMap](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) `map_users = var.map_users` will sort this.
+- adds additional IAM users to Cluster. When you create the Cluster with Terraform the users your using to access AWS with **awscli** will automaticlay be added to the Cluster so you they have access to the cluster. But we will want to make changes to this from our CI workflow. If your using the same IAM credetials (not recommended) this will be fine. If your using a seperate user their IAM ARN value needs adding to the [aws-auth ConfigMap](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) `map_users = var.map_users` will sort this.
 
 **kubernetes.tf**
 
@@ -312,23 +312,23 @@ You can now run:
 `terraform plan` to see what will be created in AWS and if your happy you can run:
 `terraform apply` and type yes to create your Cluster.
 
-This will take about 10 to 20 mins to complete. AWS EKS does cost money to be sure to remove everything once do if your just using it to test - `terraform destroy`
+This will take about 10 to 20 mins to complete. AWS EKS does cost money so be sure to remove everything once done if your just using it to test - `terraform destroy`
 
-Once this is done you have a Cluster create but how do you access it. **Terraform** will have create a `kubeconfig_{cluster-name}` file as part fo the build process.
+Once this is done you have a Cluster create but how do you access it. **Terraform** will have created a `kubeconfig_{cluster-name}` file as part fo the build process.
 
 Export this to a environmental veriable `export KUBECONFIG=/path/to/{cluster-name}` you can then run commands against your Cluster:
 
 `kubectl get pods --all-namespaces`
 
-So you have a cluster but you dont have anything on it. As we did in the [ECS](/ecs-basics) tutorial we will use a image of the site from ECR that we will then add to our  Cluster.
+So you have a cluster but you dont have anything on it. As we did in the [ECS](/ecs-basics) tutorial we will use a image of the site from ECR that we will then add to our Cluster.
 
 Create a ECR repo in AWS console - {AWS_ACCOUNT_ID}.dkr.ecr.{AWS_DEFAULT_REGION}.amazonaws.com/tutorial-site-registry
 
-We can now build and push our Docker image to AWS ECR if you need to learn how  to create docker images take a look at [Build Docker Image](/build-docker-image) tutorial. In the created repo click on the View push commands button and follow the instructions to get your image up to the repos.
+We can now build and push our Docker image to AWS ECR if you need to learn how to create docker images take a look at [Build Docker Image](/build-docker-image) tutorial. In the created repo click on the View push commands button and follow the instructions to get your image up to the repos.
 
 So how are we going to get our Image in ECR into our EKS Cluster? To acheive this we will use **Helm**
 
-**Helm** describes itself as the package mananger for **Kubernetes**. It helps define, install and upgrade even the most complex Kubernetes apps. Helm allows us to package our app along with all of the config it needs, into a **Chart**. The Helm Chart then describes howour app should be deployed and run.
+**Helm** describes itself as the package mananger for **Kubernetes**. It helps define, install and upgrade even the most complex Kubernetes apps. Helm allows us to package our app along with all of the config it needs, into a **Chart**. The Helm Chart then describes how our app should be deployed and run.
 
 You will need Helm installed on your computer [https://helm.sh/docs/intro/install/](https://helm.sh/docs/intro/install/)
 
@@ -433,13 +433,13 @@ spec:
     name: "{{  .Chart.Name }}"
 ```
 
-This will hook up you deployed app to a AWS load balancer so you can access it from the outside world.
+This will hook up your deployed app to a AWS load balancer so you can access it from the outside world.
 
 You can now run `helm install tutorial-site ./app-chart` and your app will be deployed to your Cluster.
 
 2 ways to see if it has worked:
 
-`kubectl get pods` note the name of your pod and run `kubectl port-forward tutorial-site-xxxx-xxx 3000:3000` go to localhost:3000 andyou will see your app.
+`kubectl get pods` note the name of your pod and run `kubectl port-forward tutorial-site-xxxx-xxx 3000:3000` go to localhost:3000 and you will see your app.
 
 But you set up a load balancer so instead run `kubectl describe service tutorial-site` and get he LB url - http://xxxxxxxxxxxxxxxxxxxx-xxxxxxx.eu-west-1.elb.amazonaws.com
 
@@ -470,14 +470,14 @@ Add this to pull_request workflow for testing, will move over to build later whe
       - run_lint
 ```
 
-After this we  will want to update the Image in the Cluster. To acheve this we will need to add 2 more orbs
+After this we will want to update the Image in the Cluster. To acheve this we will need to add 2 more orbs
 
 ```
 aws-eks: circleci/aws-eks@1.0.3
 kubernetes: circleci/kubernetes@0.4.0
 ```
 
-Then create a custom job. circleci/aws-eks when this was writen had a job to install helm charts but not to upgrade them (which is what want), plus currently its install helm job is broken.
+Then create a custom job. circleci/aws-eks when this was writen had a job to install helm charts but not to upgrade them (which is what we want), plus currently its install helm job is broken.
 
 ```
   upgrade-image-in-helm-chart:
@@ -507,7 +507,7 @@ Then create a custom job. circleci/aws-eks when this was writen had a job to ins
             helm upgrade tutorial-site ./infrastructure-eks/app-chart --set image.repositoryURL=${AWS_ECR_ACCOUNT_URL} --set image.tag=${CIRCLE_SHA1}
 ```
 
-We are using circleci/aws-eks to ensure we can access our cluster. Then we are installing Helm. Once this is complete we are husing the Helm upgrade command overriding the repisitoryURL and tag to ensure the lastest version of the app is deployed.
+We are using circleci/aws-eks to ensure we can access our cluster. Then we are installing Helm. Once this is complete we are using the Helm upgrade command overriding the repisitoryURL and tag to ensure the lastest version of the app is deployed.
 
 We then add the job after the ECR deploy.
 

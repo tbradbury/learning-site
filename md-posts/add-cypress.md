@@ -94,7 +94,7 @@ describe('homepage', () => {
 })
 ```
 
-If you run **Cypress** `yarn cy:open` and run the test you see it passes and can scroll through the different step you took in the left hand column.
+If you run **Cypress** `yarn cy:open` and run the test you see it passes and can scroll through the different steps you took in the left hand column.
 
 Lets add another test:
 
@@ -258,7 +258,7 @@ We need one more command to update snapshots if we want to keep changes:
 },
 ```
 
-There is one small issue that needs sorting. Snapshots create using `e2e:open` are different from snapshots created using `e2e:run`. This will result in your tests failing as they don't match up. Currently the best solution I've found it to only run snapshot tests in headless mode (`e2e:run`) this way we can use it in out pipeline.
+There is one small issue that needs sorting. Snapshots create using `e2e:open` are different from snapshots created using `e2e:run`. This will result in your tests failing as they don't match up. Currently the best solution I've found is to only run snapshot tests in headless mode (`e2e:run`) this way we can use it in out pipeline.
 
 In `<rootDir>/cypress/support/commands.js` add:
 
