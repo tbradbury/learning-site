@@ -17,13 +17,14 @@ const ContentWrapper = styled(Block)`
   padding-bottom: 150px;
 `;
 
-const Layout: React.FC<{ children: ReactNode; showHeader?: boolean }> = ({
-  children,
-  showHeader,
-}) => (
+const Layout: React.FC<{
+  children: ReactNode;
+  showHeader?: boolean;
+  text?: string;
+}> = ({ children, showHeader, text }) => (
   <PageWrapper>
     <Block paddingBlockEnd='space070' />
-    {showHeader && <Header />}
+    {showHeader && <Header text={text} />}
     <ContentWrapper>{children}</ContentWrapper>
     <Footer />
   </PageWrapper>

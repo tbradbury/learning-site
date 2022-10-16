@@ -4,7 +4,11 @@ const StyledSpan = styled.span`
   ${getColorCssFromTheme('color', 'blue050')}
 `;
 
-const Header = () => (
+interface HeaderProps {
+  text?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ text }) => (
   <Block marginBlockEnd='space080'>
     <TitleBar
       headingAs='h1'
@@ -15,8 +19,14 @@ const Header = () => (
         },
       }}
     >
-      Welcome to <br />
-      <StyledSpan>Learning by Building</StyledSpan> Tutorial Site
+      {text ? (
+        text
+      ) : (
+        <>
+          Welcome to <br />
+          <StyledSpan>Learning by Building</StyledSpan> Tutorial Site
+        </>
+      )}
     </TitleBar>
   </Block>
 );
