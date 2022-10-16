@@ -10,6 +10,7 @@ type Post = {
   id: string;
   date: string;
   order: number;
+  hide?: boolean;
 };
 
 export function getSortedPostsData() {
@@ -34,12 +35,14 @@ export function getSortedPostsData() {
   });
 
   // Sort posts by date
-  return allPostsData.sort((a: Post, b: Post) => {
-    if (a.order > b.order) {
-      return 1;
-    }
-    return -1;
-  });
+  return allPostsData
+    .sort((a: Post, b: Post) => {
+      if (a.order > b.order) {
+        return 1;
+      }
+      return -1;
+    })
+    .filter((post) => !post.hide);
 }
 
 export function getAllPostIds() {
