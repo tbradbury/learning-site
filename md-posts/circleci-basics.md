@@ -4,9 +4,10 @@ date: '2021-01-30'
 description: 'Set up deployment pipeline with CircleCI'
 keyword: 'CircleCI, pipeline, Jest, Liniting'
 order: 3
+hide: true
 ---
 
-Out of date!!!!!
+*This post is out of date. You can see the updated post [here](/post/circleci-basics-2)*
 
 1) Getting your first successful (green) build on **CircleCI**
 

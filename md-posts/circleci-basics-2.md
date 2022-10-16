@@ -1,3 +1,25 @@
+---
+title: CircleCi Basics
+date: '2021-01-30'
+description: 'Set up deployment pipeline with CircleCI'
+keyword: 'CircleCI, pipeline, Jest, Liniting'
+order: 3
+---
+
+*This is a updated post. You can see the original [here](/post/circleci-basics)*
+
+1) Getting your first successful (green) build on **CircleCI**
+
+Need to have an account with **CircleCI**.
+
+Add .circleci/config.yml to root of project
+
+First we will create a basic workflow
+
+Useful to use `circleci config validate` while making config to make sure its valid - [install local-cli](https://circleci.com/docs/2.0/local-cli/)
+
+First ***config.yml*** version:
+```
 version: 2.1
 
 executors:
@@ -103,3 +125,5 @@ workflows:
             - unit_tests
             - run_lint
 
+
+```
