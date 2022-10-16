@@ -4,9 +4,10 @@ date: '2021-04-25'
 description: 'Add unit testing with Jest'
 keyword: 'Jest, Unit tests, React Testing library'
 order: 2
+hide: true
 ---
 
-Out of date!!!!!
+*This post is out of date. You can see the updated post [here](/post/add-unit-testing-2)*
 
 To ensure the quality of the code, I need to implement testing. I'll start with Unit testing.
 
