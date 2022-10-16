@@ -61,6 +61,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
+            - node_modules/*
             - .next
 
   unit_tests:
