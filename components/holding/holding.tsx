@@ -5,6 +5,12 @@ import { Block, styled, H2 } from 'newskit';
 const ImageContainer = styled(Block)`
   width: 100%;
   max-width: 502px;
+  height: 502px;
+  position: relative;
+  @media (max-width: 510px) {
+    max-width: 302px;
+    height: 302px;
+  }
 `;
 
 const Holding = () => (
@@ -12,9 +18,7 @@ const Holding = () => (
     <ImageContainer marginBlockEnd='space050'>
       <Image
         src='/BEARD.jpg'
-        width='502px'
-        height='502px'
-        layout='responsive'
+        fill
         alt='logo'
       />
     </ImageContainer>

@@ -66,9 +66,7 @@ const Article: React.FC<ArticleProps> = ({
           {children}
         </Block>
         <Link href='/learning'>
-          <a>
-            <StyledSpan>← Back</StyledSpan>
-          </a>
+          <StyledSpan>← Back</StyledSpan>
         </Link>
       </StyledMain>
     </Layout>
