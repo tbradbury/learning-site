@@ -17,9 +17,7 @@ const StyledLink: React.FC<linkProps> = ({
   color = 'blue050',
 }) => (
   <Link href={href}>
-    <a>
       <StyledSpan color={color}>{children}</StyledSpan>
-    </a>
   </Link>
 );
 
